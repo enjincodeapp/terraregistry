@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infrastructure — Terra Registry</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Hanken+Grotesk:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<style>
+:root { --bg: #111508; --surface: #1a1d10; --surface-card: rgba(18,18,18,0.6); --text: #e2e4cf; --text-secondary: #c4c9ac; --text-muted: #8e9379; --border: rgba(255,255,255,0.08); --border-variant: #444933; --accent: #c3f400; --accent-text: #283500; --card-border: rgba(255,255,255,0.08); --glow: rgba(255,255,255,0.1); --section-alt: #0c0f04; --bg-low: #1a1d10; }
+[data-theme="light"] { --bg: #f5f5f0; --surface: #ffffff; --surface-card: rgba(255,255,255,0.7); --text: #1a1a1a; --text-secondary: #555555; --text-muted: #888; --border: rgba(0,0,0,0.08); --border-variant: #ccc; --accent: #CCFF00; --accent-text: #1a1a1a; --card-border: rgba(0,0,0,0.08); --glow: rgba(255,255,255,0.5); --section-alt: #ffffff; --bg-low: #e8e8e3; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+h1, h2, h3, h4, h5, h6 { font-family: 'Hanken Grotesk', sans-serif; }
+label, .label, .badge, .tag { font-family: 'Geist', sans-serif; }
+.glass-card { background: var(--surface-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--card-border); }
+.inner-glow { box-shadow: inset 0 1px 1px var(--glow); }
+.hero-gradient { position: relative; overflow: hidden; }
+.hero-gradient::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 50%, rgba(195,244,0,0.06) 0%, transparent 50%), radial-gradient(ellipse at 70% 20%, rgba(195,244,0,0.03) 0%, transparent 40%), radial-gradient(ellipse at 50% 80%, rgba(195,244,0,0.04) 0%, transparent 45%); pointer-events: none; z-index: 0; }
+.hero-gradient > * { position: relative; z-index: 1; }
+html { scroll-behavior: smooth; }
+.grid-bg { background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 60px 60px; }
+body { transition: background 0.3s, color 0.3s; }
+</style>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { heading: ['"Hanken Grotesk"', 'sans-serif'], body: ['Inter', 'sans-serif'], label: ['Geist', 'sans-serif'] }
+    }
+  }
+}
+</script>
+</head>
+<body>
+<nav class="fixed top-0 left-0 right-0 z-50 glass-card border-b" style="border-color: var(--border); height: 64px;">
+  <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2">
+      <span class="w-7 h-7 rounded-lg flex items-center justify-center" style="background: var(--accent);">
+        <span class="material-symbols-outlined text-lg" style="color: var(--bg); font-variation-settings:'FILL' 1">terrain</span>
+      </span>
+      <span class="font-heading font-bold text-lg" style="color: var(--text);">Terra<span style="color: var(--accent);">Registry</span></span>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="marketplace.html" class="font-label text-sm transition-colors" style="color: var(--text-secondary);">Marketplace</a>
+      <a href="dashboard.html" class="font-label text-sm transition-colors" style="color: var(--text-secondary);">Analytics</a>
+      <a href="infrastructure.html" class="font-label text-sm" style="color: var(--text); border-bottom: 2px solid var(--accent); padding-bottom: 2px;">Infrastructure</a>
+      <a href="governance.html" class="font-label text-sm transition-colors" style="color: var(--text-secondary);">Governance</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="toggleTheme()" class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:var(--bg-low);border:1px solid var(--border-variant);" title="Toggle theme">
+        <span class="material-symbols-outlined text-sm" style="color:var(--text-secondary);" id="themeIcon">dark_mode</span>
+      </button>
+      <a href="login.html" class="font-label text-xs transition-colors" style="color: var(--text-secondary); border: 1px solid var(--border-variant); border-radius: 8px; padding: 8px 16px;">Sign In</a>
+      <a href="register.html" class="font-label text-xs transition-all" style="background: var(--accent); color: var(--accent-text); border-radius: 8px; padding: 8px 16px;">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero-gradient" style="min-height: 60vh; padding-top: 64px; display: flex; align-items: center;">
+  <div class="max-w-7xl mx-auto px-6 py-24 w-full">
+    <div class="max-w-3xl">
+      <span class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 mb-6" style="background: var(--surface); border: 1px solid rgba(195,244,0,0.2);">
+        <span class="w-1.5 h-1.5 rounded-full" style="background: var(--accent);"></span>
+        <span class="font-label text-xs" style="color: var(--accent);">Sovereign Infrastructure</span>
+      </span>
+      <h1 class="font-heading text-5xl md:text-6xl font-extrabold leading-[1.05] mb-6" style="color: var(--text);">Built on <span style="color: var(--accent);">Sovereign</span> Infrastructure</h1>
+      <p class="text-lg leading-relaxed max-w-xl" style="color: var(--text-secondary);">Nigeria's property intelligence runs on a decentralized, tamper-proof infrastructure layer designed for institutional trust and scale.</p>
+    </div>
+  </div>
+</section>
+
+<section class="py-20">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-3 gap-8 mb-16">
+      <div class="glass-card rounded-2xl p-8 inner-glow text-center">
+        <div class="font-heading text-5xl font-bold mb-2" style="color: var(--accent);">1,247</div>
+        <div class="font-label text-xs uppercase tracking-wider" style="color: var(--text-muted);">Active Sovereign Nodes</div>
+      </div>
+      <div class="glass-card rounded-2xl p-8 inner-glow text-center">
+        <div class="font-heading text-5xl font-bold mb-2" style="color: var(--accent);">99.97%</div>
+        <div class="font-label text-xs uppercase tracking-wider" style="color: var(--text-muted);">Network Uptime</div>
+      </div>
+      <div class="glass-card rounded-2xl p-8 inner-glow text-center">
+        <div class="font-heading text-5xl font-bold mb-2" style="color: var(--accent);">8.4M+</div>
+        <div class="font-label text-xs uppercase tracking-wider" style="color: var(--text-muted);">Titles Registered</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-20" style="border-top: 1px solid var(--border);">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-center mb-24">
+      <div>
+        <span class="material-symbols-outlined text-3xl mb-4" style="color: var(--accent);">lan</span>
+        <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4" style="color: var(--text);">Decentralized Data Layer</h2>
+        <p class="leading-relaxed mb-6" style="color: var(--text-secondary);">The Terra Registry operates on a sovereign decentralized data layer with nodes distributed across all 36 states and the FCT. Each node maintains a complete copy of the registry, ensuring data integrity, availability, and censorship resistance.</p>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">Distributed ledger with cryptographic verification</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">Cross-state replication with consensus protocol</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">Tamper-evident title history with Merkle tree indexing</span></li>
+        </ul>
+      </div>
+      <div class="glass-card rounded-2xl p-6 inner-glow">
+        <div class="aspect-[4/3] rounded-xl relative overflow-hidden" style="background: var(--bg-low);">
+          <div class="absolute inset-0 grid-bg"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="grid grid-cols-5 gap-2 opacity-30">
+              <div class="w-4 h-4 rounded-full" style="background: var(--accent);"></div>
+              <div class="w-4 h-4 rounded-full" style="background: var(--accent); opacity: 0.6;"></div>
+              <div class="w-4 h-4 rounded-full" style="background: var(--accent); opacity: 0.8;"></div>
+              <div class="w-4 h-4 rounded-full" style="background: var(--accent); opacity: 0.4;"></div>
+              <div class="w-4 h-4 rounded-full" style="background: var(--accent); opacity: 0.9;"></div>
+            </div>
+          </div>
+          <div class="absolute bottom-4 left-4 glass-card rounded-lg p-3 inner-glow">
+            <div class="font-label text-xs" style="color: var(--text);">Node Distribution</div>
+            <div class="font-label text-xs" style="color: var(--text-muted);">36 states + FCT &middot; 3+ nodes per region</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-16 items-center mb-24">
+      <div class="order-2 lg:order-1">
+        <div class="glass-card rounded-2xl p-6 inner-glow">
+          <div class="aspect-[4/3] rounded-xl relative overflow-hidden" style="background: var(--bg-low);">
+            <div class="absolute inset-0 grid-bg"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="material-symbols-outlined text-6xl" style="color: var(--accent); opacity: 0.15;">hub</span>
+            </div>
+            <div class="absolute top-4 left-4 glass-card rounded-lg p-3 inner-glow">
+              <div class="font-label text-xs" style="color: var(--accent);">Consensus: 87%</div>
+              <div class="font-label text-xs" style="color: var(--text-muted);">Network health: Excellent</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="order-1 lg:order-2">
+        <span class="material-symbols-outlined text-3xl mb-4" style="color: var(--accent);">hub</span>
+        <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4" style="color: var(--text);">Node Network</h2>
+        <p class="leading-relaxed mb-6" style="color: var(--text-secondary);">Institutional-grade node infrastructure run by verified sovereign entities including state governments, federal agencies, and accredited financial institutions.</p>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">Validator nodes operated by sovereign institutions</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">Automatic failover and disaster recovery</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">Real-time sync with sub-second latency</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-16 items-center mb-24">
+      <div>
+        <span class="material-symbols-outlined text-3xl mb-4" style="color: var(--accent);">api</span>
+        <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4" style="color: var(--text);">API Infrastructure</h2>
+        <p class="leading-relaxed mb-6" style="color: var(--text-secondary);">Enterprise-grade REST and GraphQL APIs for seamless integration with your existing systems. All endpoints are authenticated, rate-limited, and fully documented.</p>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">RESTful & GraphQL endpoints with SDK support</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">OAuth 2.0 + API key authentication</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">99.95% uptime SLA with dedicated support</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="glass-card rounded-2xl p-6 inner-glow">
+          <div class="rounded-xl p-5 font-mono text-xs leading-relaxed" style="background: var(--section-alt);">
+            <div><span style="color: var(--accent);">GET</span> <span style="color: var(--text);">/api/v2/property/TR-8849-LND</span></div>
+            <div class="mt-2" style="color: var(--text-muted);">{</div>
+            <div class="ml-3" style="color: var(--text-muted);"><span style="color: var(--text-secondary);">"title_integrity"</span>: <span style="color: var(--accent);">0.94</span>,</div>
+            <div class="ml-3" style="color: var(--text-muted);"><span style="color: var(--text-secondary);">"valuation"</span>: <span style="color: var(--accent);">420500000</span>,</div>
+            <div class="ml-3" style="color: var(--text-muted);"><span style="color: var(--text-secondary);">"yield_5yr"</span>: <span style="color: var(--accent);">0.082</span>,</div>
+            <div class="ml-3" style="color: var(--text-muted);"><span style="color: var(--text-secondary);">"node"</span>: <span style="color: var(--accent);">"LAG-042"</span></div>
+            <div style="color: var(--text-muted);">}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div class="order-2 lg:order-1">
+        <div class="glass-card rounded-2xl p-6 inner-glow">
+          <div class="aspect-[4/3] rounded-xl relative overflow-hidden" style="background: var(--bg-low);">
+            <div class="absolute inset-0 grid-bg"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="material-symbols-outlined text-6xl" style="color: var(--accent); opacity: 0.15;">shield</span>
+            </div>
+            <div class="absolute bottom-4 left-4 glass-card rounded-lg p-3 inner-glow">
+              <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background: var(--accent);"></span><span class="font-label text-xs" style="color: var(--text);">Security Level: Sovereign Grade</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="order-1 lg:order-2">
+        <span class="material-symbols-outlined text-3xl mb-4" style="color: var(--accent);">shield</span>
+        <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4" style="color: var(--text);">Security Architecture</h2>
+        <p class="leading-relaxed mb-6" style="color: var(--text-secondary);">Defence-in-depth security model with hardware security modules, multi-party computation, and continuous audit trails.</p>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">HSM-backed key management with FIPS 140-2 Level 3</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">End-to-end encryption for all data in transit and at rest</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-sm mt-0.5" style="color: var(--accent);">check_circle</span><span class="font-label text-xs" style="color: var(--text-secondary);">Quarterly penetration testing and security audits</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="border-top: 1px solid var(--border); padding: 64px 0;">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid md:grid-cols-4 gap-10">
+      <div>
+        <a href="index.html" class="flex items-center gap-2 mb-4">
+          <span class="w-7 h-7 rounded-lg flex items-center justify-center" style="background: var(--accent);">
+            <span class="material-symbols-outlined text-lg" style="color: var(--bg); font-variation-settings:'FILL' 1">terrain</span>
+          </span>
+          <span class="font-heading font-bold text-lg" style="color: var(--text);">Terra<span style="color: var(--accent);">Registry</span></span>
+        </a>
+        <p class="font-label text-xs leading-relaxed" style="color: var(--text-muted);">Nigeria's sovereign property intelligence infrastructure. Trusted by institutions.</p>
+      </div>
+      <div>
+        <h4 class="font-heading font-semibold text-sm mb-4" style="color: var(--text);">Registry</h4>
+        <ul class="space-y-2.5">
+          <li><a href="marketplace.html" class="font-label text-xs transition-colors" style="color: var(--text-muted);">Marketplace</a></li>
+          <li><a href="search.html" class="font-label text-xs transition-colors" style="color: var(--text-muted);">Property Search</a></li>
+          <li><a href="dashboard.html" class="font-label text-xs transition-colors" style="color: var(--text-muted);">Analytics</a></li>
+          <li><a href="detail.html" class="font-label text-xs transition-colors" style="color: var(--text-muted);">Sample Report</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-heading font-semibold text-sm mb-4" style="color: var(--text);">Developer</h4>
+        <ul class="space-y-2.5">
+          <li><a href="infrastructure.html" class="font-label text-xs transition-colors" style="color: var(--text-muted);">API Documentation</a></li>
+          <li><a href="infrastructure.html" class="font-label text-xs transition-colors" style="color: var(--text-muted);">Node Network</a></li>
+          <li><a href="governance.html" class="font-label text-xs transition-colors" style="color: var(--text-muted);">Governance</a></li>
+          <li><a href="infrastructure.html" class="font-label text-xs transition-colors" style="color: var(--text-muted);">System Status</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-heading font-semibold text-sm mb-4" style="color: var(--text);">Connect</h4>
+        <ul class="space-y-2.5">
+          <li><span class="font-label text-xs" style="color: var(--text-muted);">Lagos, Nigeria</span></li>
+          <li><span class="font-label text-xs" style="color: var(--text-muted);">hello@terraregistry.ng</span></li>
+          <li><span class="font-label text-xs" style="color: var(--text-muted);">+234 800 TERRA</span></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top: 1px solid var(--border); margin-top: 40px; padding-top: 24px; display: flex; justify-content: space-between; align-items: center;">
+      <span class="font-label text-xs" style="color: var(--border-variant);">&copy; 2026 Terra Registry. All rights reserved.</span>
+      <div class="flex gap-4">
+        <span class="font-label text-xs" style="color: var(--border-variant);">Privacy</span>
+        <span class="font-label text-xs" style="color: var(--border-variant);">Terms</span>
+        <span class="font-label text-xs" style="color: var(--border-variant);">Licence</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('themeIcon').textContent = next === 'dark' ? 'dark_mode' : 'light_mode';
+}
+(function() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.textContent = saved === 'dark' ? 'dark_mode' : 'light_mode';
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics Dashboard — Terra Registry</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<style>
+:root { --bg: #111508; --surface: #1a1d10; --surface-card: rgba(18,18,18,0.6); --text: #e2e4cf; --text-secondary: #c4c9ac; --text-muted: #8e9379; --border: rgba(255,255,255,0.08); --border-variant: #444933; --accent: #c3f400; --accent-text: #283500; --card-border: rgba(255,255,255,0.08); --glow: rgba(255,255,255,0.1); --section-alt: #0c0f04; --bg-low: #1a1d10; }
+[data-theme="light"] { --bg: #f5f5f0; --surface: #ffffff; --surface-card: rgba(255,255,255,0.7); --text: #1a1a1a; --text-secondary: #555555; --text-muted: #888; --border: rgba(0,0,0,0.08); --border-variant: #ccc; --accent: #CCFF00; --accent-text: #1a1a1a; --card-border: rgba(0,0,0,0.08); --glow: rgba(255,255,255,0.5); --section-alt: #ffffff; --bg-low: #e8e8e3; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Hanken Grotesk', sans-serif; }
+label, .label, .badge, .tag { font-family: 'Geist', sans-serif; }
+.glass-card { background: var(--surface-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--card-border); }
+.inner-glow { box-shadow: inset 0 1px 1px var(--glow); }
+.grid-bg { background-image: linear-gradient(color-mix(in srgb, var(--border) 25%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--border) 25%, transparent) 1px, transparent 1px); background-size: 60px 60px; }
+.sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 1rem; border-radius: 0.75rem; font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-secondary); text-decoration: none; transition: all 0.15s; }
+.sidebar-link:hover { background: var(--bg-low); color: var(--text); }
+.sidebar-link.active { background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--accent); border-left: 3px solid var(--accent); border-radius: 0.75rem 0 0 0.75rem; }
+.focus-accent:focus { border-color: color-mix(in srgb, var(--accent) 50%, transparent); outline: none; }
+</style>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { heading: ['"Hanken Grotesk"', 'sans-serif'], body: ['Inter', 'sans-serif'], label: ['Geist', 'sans-serif'] }
+    }
+  }
+}
+</script>
+</head>
+<body>
+<div class="flex h-screen overflow-hidden">
+  <aside style="width: 16rem; flex-shrink: 0; border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; background: var(--section-alt);">
+    <div style="padding: 1.25rem; border-bottom: 1px solid var(--border);">
+      <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+        <span style="width: 1.75rem; height: 1.75rem; border-radius: 0.5rem; background: var(--accent); display: flex; align-items: center; justify-content: center;">
+          <span class="material-symbols-outlined" style="color: var(--accent-text); font-size: 1.125rem; font-variation-settings:'FILL' 1">terrain</span>
+        </span>
+        <span style="font-family: 'Hanken Grotesk', sans-serif; font-weight: 700; font-size: 0.875rem; color: var(--text);">Federal<span style="color: var(--accent);">Registry</span></span>
+      </a>
+    </div>
+    <div style="padding: 1rem;">
+      <button style="width: 100%; font-family: 'Geist', sans-serif; font-size: 0.75rem; background: var(--accent); color: var(--accent-text); border-radius: 0.75rem; padding: 0.625rem 0; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 0.375rem; box-shadow: inset 0 1px 1px var(--glow); transition: filter 0.15s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">
+        <span class="material-symbols-outlined" style="font-size: 0.875rem;">add</span> New Registry Entry
+      </button>
+    </div>
+    <nav style="flex: 1; padding: 0 0.75rem; display: flex; flex-direction: column; gap: 0.125rem; overflow-y: auto;">
+      <a href="dashboard.html" class="sidebar-link active"><span class="material-symbols-outlined" style="font-size: 1.125rem;">dashboard</span>Dashboard</a>
+      <a href="search.html" class="sidebar-link"><span class="material-symbols-outlined" style="font-size: 1.125rem;">folder_open</span>Registry</a>
+      <a href="search.html" class="sidebar-link"><span class="material-symbols-outlined" style="font-size: 1.125rem;">map</span>Maps</a>
+      <a href="dashboard.html" class="sidebar-link"><span class="material-symbols-outlined" style="font-size: 1.125rem;">analytics</span>Analytics</a>
+      <a href="detail.html" class="sidebar-link"><span class="material-symbols-outlined" style="font-size: 1.125rem;">security</span>Security</a>
+      <a href="infrastructure.html" class="sidebar-link"><span class="material-symbols-outlined" style="font-size: 1.125rem;">settings</span>Settings</a>
+      <a href="governance.html" class="sidebar-link"><span class="material-symbols-outlined" style="font-size: 1.125rem;">support</span>Support</a>
+    </nav>
+    <div style="padding: 1rem; border-top: 1px solid var(--border);">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 2rem; height: 2rem; border-radius: 50%; background: var(--border-variant); display: flex; align-items: center; justify-content: center;"><span class="material-symbols-outlined" style="font-size: 0.875rem; color: var(--text-secondary);">person</span></div>
+        <div><div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Institutional User</div><div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">Sovereign Node #042</div></div>
+      </div>
+    </div>
+  </aside>
+  <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+    <header style="height: 4rem; flex-shrink: 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 1.5rem; gap: 1rem; background: var(--bg);">
+      <div style="position: relative; flex: 1; max-width: 28rem;">
+        <span class="material-symbols-outlined" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.125rem;">search</span>
+        <input type="text" placeholder="Search registry..." class="focus-accent" style="width: 100%; background: var(--surface); border: 1px solid var(--border-variant); border-radius: 0.75rem; padding: 0.5rem 0.75rem 0.5rem 2.5rem; font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text); caret-color: var(--accent);" onfocus="this.style.borderColor='color-mix(in srgb, var(--accent) 50%, transparent)'" onblur="this.style.borderColor=''">
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-left: auto;">
+        <button style="width: 2rem; height: 2rem; border-radius: 50%; background: var(--surface); border: 1px solid var(--border-variant); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s;" onmouseover="this.style.background='var(--bg-low)'" onmouseout="this.style.background='var(--surface)'"><span class="material-symbols-outlined" style="font-size: 0.875rem; color: var(--text-secondary);">notifications</span></button>
+        <button style="width: 2rem; height: 2rem; border-radius: 50%; background: var(--surface); border: 1px solid var(--border-variant); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s;" onmouseover="this.style.background='var(--bg-low)'" onmouseout="this.style.background='var(--surface)'"><span class="material-symbols-outlined" style="font-size: 0.875rem; color: var(--text-secondary);">help</span></button>
+        <button id="themeToggle" onclick="toggleTheme()" style="width: 2rem; height: 2rem; border-radius: 50%; background: var(--surface); border: 1px solid var(--border-variant); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s;" aria-label="Toggle theme" onmouseover="this.style.background='var(--bg-low)'" onmouseout="this.style.background='var(--surface)'"><span id="themeIcon" class="material-symbols-outlined" style="font-size: 1.25rem; color: var(--accent);">dark_mode</span></button>
+      </div>
+    </header>
+    <div style="flex: 1; overflow-y: auto;">
+      <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+        <div>
+          <h1 style="font-family: 'Hanken Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--text);">Analytics Dashboard</h1>
+          <p style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Real-time property intelligence and market monitoring</p>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+          <select class="focus-accent" style="background: var(--surface); border: 1px solid var(--border-variant); border-radius: 0.75rem; padding: 0.5rem 1rem; font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-secondary); box-shadow: inset 0 1px 1px var(--glow);">
+            <option>Lagos State</option>
+            <option>Abuja FCT</option>
+            <option>Rivers State</option>
+            <option>All Nigeria</option>
+          </select>
+          <div style="display: flex; background: var(--surface); border-radius: 0.75rem; border: 1px solid var(--border-variant); box-shadow: inset 0 1px 1px var(--glow); overflow: hidden;">
+            <button style="font-family: 'Geist', sans-serif; font-size: 0.75rem; padding: 0.5rem 1rem; color: var(--text); background: color-mix(in srgb, var(--accent) 20%, transparent); border: none; cursor: pointer;">All</button>
+            <button style="font-family: 'Geist', sans-serif; font-size: 0.75rem; padding: 0.5rem 1rem; color: var(--text-muted); background: transparent; border: none; cursor: pointer;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-muted)'">Residential</button>
+            <button style="font-family: 'Geist', sans-serif; font-size: 0.75rem; padding: 0.5rem 1rem; color: var(--text-muted); background: transparent; border: none; cursor: pointer;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-muted)'">Commercial</button>
+            <button style="font-family: 'Geist', sans-serif; font-size: 0.75rem; padding: 0.5rem 1rem; color: var(--text-muted); background: transparent; border: none; cursor: pointer;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-muted)'">Industrial</button>
+          </div>
+          <span style="background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); font-family: 'Geist', sans-serif; font-size: 0.75rem; padding: 0.375rem 0.75rem; border-radius: 9999px; border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);">Data Fidelity: 94.2%</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+          <div style="grid-column: span 2; background: var(--surface-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--card-border); border-radius: 1rem; padding: 1.5rem; box-shadow: inset 0 1px 1px var(--glow);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+              <h3 style="font-family: 'Hanken Grotesk', sans-serif; font-weight: 600; color: var(--text);">Market Heatmap</h3>
+              <span class="material-symbols-outlined" style="color: var(--accent); font-size: 1.125rem;">grid_on</span>
+            </div>
+            <div style="aspect-ratio: 2 / 1; background: var(--bg-low); border-radius: 0.75rem; overflow: hidden; position: relative;">
+              <div style="position: absolute; inset: 0;" class="grid-bg"></div>
+              <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+                <span class="material-symbols-outlined" style="font-size: 4rem; color: color-mix(in srgb, var(--accent) 15%, transparent);">map</span>
+              </div>
+              <div style="position: absolute; bottom: 1rem; left: 1rem; background: var(--surface-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--card-border); border-radius: 0.5rem; padding: 0.75rem; box-shadow: inset 0 1px 1px var(--glow);">
+                <div style="display: flex; align-items: center; gap: 0.5rem;"><span style="width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--accent);"></span><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Lagos Island</span><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--accent);">N420.5M</span></div>
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;"><span style="width: 0.5rem; height: 0.5rem; border-radius: 50%; background: color-mix(in srgb, var(--accent) 60%, transparent);"></span><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Maitama</span><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--accent);">N285.0M</span></div>
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;"><span style="width: 0.5rem; height: 0.5rem; border-radius: 50%; background: color-mix(in srgb, var(--accent) 30%, transparent);"></span><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Ikeja</span><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--accent);">N155.0M</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="background: var(--surface-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--card-border); border-radius: 1rem; padding: 1.25rem; box-shadow: inset 0 1px 1px var(--glow);">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <h3 style="font-family: 'Hanken Grotesk', sans-serif; font-weight: 600; color: var(--text); font-size: 0.875rem;">AI Market Sentiment</h3>
+                <span class="material-symbols-outlined" style="color: var(--accent); font-size: 1.125rem;">psychology</span>
+              </div>
+              <div style="text-align: center;">
+                <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 2.25rem; font-weight: 700; color: var(--accent);">Bullish</div>
+                <div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Confidence: 87%</div>
+              </div>
+              <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <div style="display: flex; justify-content: space-between;"><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">Supply Index</span><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">-2.4%</span></div>
+                <div style="display: flex; justify-content: space-between;"><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">Demand Index</span><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--accent);">+5.1%</span></div>
+                <div style="display: flex; justify-content: space-between;"><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">Price Momentum</span><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--accent);">+3.8%</span></div>
+              </div>
+            </div>
+            <div style="background: var(--surface-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--card-border); border-radius: 1rem; padding: 1.25rem; box-shadow: inset 0 1px 1px var(--glow);">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <h3 style="font-family: 'Hanken Grotesk', sans-serif; font-weight: 600; color: var(--text); font-size: 0.875rem;">Registry Activity</h3>
+                <span class="material-symbols-outlined" style="color: var(--accent); font-size: 1.125rem;">bolt</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <span style="width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--accent);"></span>
+                  <div><div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">New title registered</div><div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">2 min ago</div></div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <span style="width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--accent);"></span>
+                  <div><div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Valuation updated</div><div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">15 min ago</div></div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <span style="width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--accent);"></span>
+                  <div><div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Ownership transfer</div><div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">1 hr ago</div></div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <span style="width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--border-variant);"></span>
+                  <div><div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Node sync complete</div><div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">3 hr ago</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem;">
+          <div style="grid-column: span 3; background: var(--surface-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--card-border); border-radius: 1rem; padding: 1.5rem; box-shadow: inset 0 1px 1px var(--glow);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+              <h3 style="font-family: 'Hanken Grotesk', sans-serif; font-weight: 600; color: var(--text);">Price Index Dynamics</h3>
+              <span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">12-Month Trend</span>
+            </div>
+            <div style="height: 12rem; display: flex; align-items: flex-end; gap: 0.5rem;">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">245</span>
+                <div style="width: 100%; background: var(--border-variant); border-radius: 0.125rem; height: 40%;"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Jan</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">248</span>
+                <div style="width: 100%; background: var(--border-variant); border-radius: 0.125rem; height: 42%;"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Feb</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">252</span>
+                <div style="width: 100%; background: var(--border-variant); border-radius: 0.125rem; height: 45%;"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Mar</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">260</span>
+                <div style="width: 100%; background: var(--border-variant); border-radius: 0.125rem; height: 50%;"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Apr</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">258</span>
+                <div style="width: 100%; background: var(--border-variant); border-radius: 0.125rem; height: 48%;"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">May</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">265</span>
+                <div style="width: 100%; background: var(--border-variant); border-radius: 0.125rem; height: 52%;"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Jun</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">272</span>
+                <div style="width: 100%; border-radius: 0.125rem; height: 58%; background: color-mix(in srgb, var(--accent) 70%, transparent);"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Jul</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">285</span>
+                <div style="width: 100%; border-radius: 0.125rem; height: 65%; background: color-mix(in srgb, var(--accent) 70%, transparent);"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Aug</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">290</span>
+                <div style="width: 100%; border-radius: 0.125rem; height: 70%; background: color-mix(in srgb, var(--accent) 70%, transparent);"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Sep</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">298</span>
+                <div style="width: 100%; border-radius: 0.125rem; height: 75%; background: color-mix(in srgb, var(--accent) 70%, transparent);"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Oct</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">305</span>
+                <div style="width: 100%; border-radius: 0.125rem; height: 80%; background: var(--accent);"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Nov</span>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text);">312</span>
+                <div style="width: 100%; border-radius: 0.125rem; height: 85%; background: var(--accent);"></div>
+                <span style="font-family: 'Geist', sans-serif; font-size: 0.625rem; color: var(--text-muted);">Dec</span>
+              </div>
+            </div>
+          </div>
+          <div style="grid-column: span 2; background: var(--surface-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--card-border); border-radius: 1rem; padding: 1.5rem; box-shadow: inset 0 1px 1px var(--glow);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+              <h3 style="font-family: 'Hanken Grotesk', sans-serif; font-weight: 600; color: var(--text);">Report Intelligence</h3>
+              <span class="material-symbols-outlined" style="color: var(--accent); font-size: 1.125rem;">picture_as_pdf</span>
+            </div>
+            <div style="aspect-ratio: 3 / 4; background: var(--bg-low); border-radius: 0.75rem; padding: 1rem; box-shadow: inset 0 1px 1px var(--glow); position: relative; overflow: hidden;">
+              <div style="text-align: center; margin-bottom: 1rem;">
+                <div style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">PDF Export Preview</div>
+                <div style="width: 3rem; height: 0.125rem; background: var(--accent); margin: 0 auto;"></div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div style="height: 0.375rem; background: var(--border-variant); border-radius: 0.25rem; width: 75%;"></div>
+                <div style="height: 0.375rem; background: var(--border-variant); border-radius: 0.25rem; width: 50%;"></div>
+                <div style="height: 0.375rem; background: var(--border-variant); border-radius: 0.25rem; width: 83.333%;"></div>
+                <div style="height: 5rem; background: var(--border-variant); border-radius: 0.25rem;"></div>
+                <div style="height: 0.375rem; background: var(--border-variant); border-radius: 0.25rem; width: 66.667%;"></div>
+                <div style="height: 0.375rem; background: var(--border-variant); border-radius: 0.25rem; width: 75%;"></div>
+              </div>
+            </div>
+            <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;"><input type="checkbox" checked style="accent-color: var(--accent);"><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Market Overview</span></label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;"><input type="checkbox" checked style="accent-color: var(--accent);"><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Title Verification</span></label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;"><input type="checkbox" checked style="accent-color: var(--accent);"><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Valuation Report</span></label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;"><input type="checkbox" style="accent-color: var(--accent);"><span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text);">Neighborhood Analysis</span></label>
+              <button style="width: 100%; margin-top: 0.75rem; font-family: 'Geist', sans-serif; font-size: 0.75rem; background: var(--accent); color: var(--accent-text); border-radius: 0.75rem; padding: 0.625rem 0; border: none; cursor: pointer; font-weight: 600; box-shadow: inset 0 1px 1px var(--glow); transition: filter 0.15s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">Generate & Export PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer style="border-top: 1px solid var(--border); padding: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">&copy; 2026 Terra Registry. All rights reserved.</span>
+          <div style="display: flex; gap: 1rem;">
+            <span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">Privacy</span>
+            <span style="font-family: 'Geist', sans-serif; font-size: 0.75rem; color: var(--text-muted);">Terms</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('themeIcon').textContent = next === 'dark' ? 'dark_mode' : 'light_mode';
+}
+(function() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('themeIcon').textContent = saved === 'dark' ? 'dark_mode' : 'light_mode';
+  });
+})();
+</script>
+</body>
+</html>

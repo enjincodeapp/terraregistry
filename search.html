@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Search — Terra Registry</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<style>
+:root { --bg: #111508; --surface: #1a1d10; --surface-card: rgba(18,18,18,0.6); --text: #e2e4cf; --text-secondary: #c4c9ac; --text-muted: #8e9379; --border: rgba(255,255,255,0.08); --border-variant: #444933; --accent: #c3f400; --accent-text: #283500; --card-border: rgba(255,255,255,0.08); --glow: rgba(255,255,255,0.1); --section-alt: #0c0f04; --bg-low: #1a1d10; }
+[data-theme="light"] { --bg: #f5f5f0; --surface: #ffffff; --surface-card: rgba(255,255,255,0.7); --text: #1a1a1a; --text-secondary: #555555; --text-muted: #888; --border: rgba(0,0,0,0.08); --border-variant: #ccc; --accent: #CCFF00; --accent-text: #1a1a1a; --card-border: rgba(0,0,0,0.08); --glow: rgba(255,255,255,0.5); --section-alt: #ffffff; --bg-low: #e8e8e3; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: background .3s, color .3s; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Hanken Grotesk', sans-serif; }
+label, .label, .badge, .tag { font-family: 'Geist', sans-serif; }
+.glass-card { background: var(--surface-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--card-border); transition: background .3s, border .3s; }
+.inner-glow { box-shadow: inset 0 1px 1px var(--glow); }
+.hero-gradient { position: relative; overflow: hidden; }
+.hero-gradient::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 50%, rgba(204,255,0,0.06) 0%, transparent 50%), radial-gradient(ellipse at 70% 20%, rgba(204,255,0,0.03) 0%, transparent 40%), radial-gradient(ellipse at 50% 80%, rgba(204,255,0,0.04) 0%, transparent 45%); pointer-events: none; z-index: 0; }
+.hero-gradient > * { position: relative; z-index: 1; }
+html { scroll-behavior: smooth; }
+.grid-bg { background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 60px 60px; }
+[data-theme="light"] .grid-bg { background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px); }
+</style>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { heading: ['"Hanken Grotesk"', 'sans-serif'], body: ['Inter', 'sans-serif'], label: ['Geist', 'sans-serif'] },
+      colors: {
+        background: '#111508', 'surface-container-lowest': '#0c0f04', 'surface-container-low': '#1a1d10', 'surface-container': '#1e2113', 'surface-container-high': '#282b1d', 'surface-container-highest': '#333627',
+        'on-surface': '#e2e4cf', 'on-surface-variant': '#c4c9ac', outline: '#8e9379', 'outline-variant': '#444933',
+        'primary-container': '#c3f400', 'on-primary-container': '#556d00', 'on-primary': '#283500',
+        primary: '#ffffff'
+      }
+    }
+  }
+}
+</script>
+</head>
+<body>
+<nav class="fixed top-0 left-0 right-0 z-50 glass-card border-b" style="border-color:var(--border);height:64px;">
+  <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2">
+      <span class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:var(--accent);">
+        <span class="material-symbols-outlined text-lg" style="color:var(--accent-text);font-variation-settings:'FILL' 1">terrain</span>
+      </span>
+      <span class="font-heading font-bold text-lg" style="color:var(--text);">Terra<span style="color:var(--accent);">Registry</span></span>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="marketplace.html" class="label text-sm" style="color:var(--accent);border-bottom:2px solid var(--accent);padding-bottom:2px;">Marketplace</a>
+      <a href="dashboard.html" class="label text-sm" style="color:var(--text-secondary);">Analytics</a>
+      <a href="infrastructure.html" class="label text-sm" style="color:var(--text-secondary);">Infrastructure</a>
+      <a href="governance.html" class="label text-sm" style="color:var(--text-secondary);">Governance</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="toggleTheme()" class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:var(--bg-low);border:1px solid var(--border-variant);" title="Toggle theme">
+        <span class="material-symbols-outlined text-sm" style="color:var(--text-secondary);" id="themeIcon">dark_mode</span>
+      </button>
+      <a href="login.html" class="label text-xs px-4 py-2 rounded-lg transition-colors" style="color:var(--text-secondary);border:1px solid var(--border-variant);">Sign In</a>
+      <a href="register.html" class="label text-xs px-4 py-2 rounded-lg font-semibold" style="background:var(--accent);color:var(--accent-text);">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero-gradient" style="padding-top:64px;">
+  <div class="max-w-7xl mx-auto px-6 py-16 md:py-20">
+    <div class="max-w-3xl mx-auto text-center mb-10">
+      <h1 class="font-heading text-4xl md:text-5xl font-extrabold mb-4" style="color:var(--text);">Property <span style="color:var(--accent);">Search</span></h1>
+      <p class="text-base mb-8" style="color:var(--text-secondary);">Search Nigeria's sovereign property registry for verified titles, valuations, and ownership intelligence.</p>
+      <div class="flex items-center gap-3 max-w-2xl mx-auto">
+        <div class="flex-1 relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-lg" style="color:var(--text-muted);">search</span>
+          <input type="text" placeholder="Search by address, title number, owner, or coordinates..." class="w-full rounded-xl py-3.5 pl-11 pr-4 label text-sm focus:outline-none transition-colors" style="background:var(--bg-low);border:1px solid var(--border-variant);color:var(--text);">
+        </div>
+        <button class="label text-sm rounded-xl px-6 py-3.5 font-semibold whitespace-nowrap" style="background:var(--accent);color:var(--accent-text);">QUERY REGISTRY</button>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3 mb-8 pb-6" style="border-bottom:1px solid var(--border);">
+      <span class="label text-sm font-medium" style="color:var(--text);">Filters</span>
+      <select class="label text-sm rounded-xl py-2 px-4 focus:outline-none" style="background:var(--bg-low);border:1px solid var(--border-variant);color:var(--text);">
+        <option>All States</option>
+        <option>Lagos</option>
+        <option>Abuja FCT</option>
+        <option>Rivers</option>
+        <option>Ogun</option>
+      </select>
+      <select class="label text-sm rounded-xl py-2 px-4 focus:outline-none" style="background:var(--bg-low);border:1px solid var(--border-variant);color:var(--text);">
+        <option>Property Type</option>
+        <option>Residential</option>
+        <option>Commercial</option>
+        <option>Industrial</option>
+        <option>Land</option>
+      </select>
+      <select class="label text-sm rounded-xl py-2 px-4 focus:outline-none" style="background:var(--bg-low);border:1px solid var(--border-variant);color:var(--text);">
+        <option>Price Range</option>
+        <option>Under N50M</option>
+        <option>N50M – N100M</option>
+        <option>N100M – N500M</option>
+        <option>Above N500M</option>
+      </select>
+      <button class="label text-sm rounded-xl px-4 py-2" style="color:var(--text-muted);border:1px solid var(--border);">Clear Filters</button>
+      <div class="ml-auto">
+        <span class="font-heading text-lg font-bold" style="color:var(--text);">142</span>
+        <span class="label text-sm" style="color:var(--text-muted);"> Properties Found</span>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-5 gap-6">
+      <div class="lg:col-span-3 space-y-5">
+        <div class="glass-card rounded-xl overflow-hidden inner-glow flex flex-col md:flex-row">
+          <div class="w-full md:w-48 h-48 md:h-auto flex-shrink-0 relative" style="background:var(--bg-low);">
+            <div class="absolute inset-0 grid-bg opacity-30"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="material-symbols-outlined text-4xl" style="color:var(--text-muted);">image</span>
+            </div>
+          </div>
+          <div class="flex-1 p-5 flex flex-col justify-between">
+            <div>
+              <h3 class="font-heading font-bold text-lg mb-1" style="color:var(--text);">Oceanview Executive Villa</h3>
+              <div class="flex items-center gap-1.5 mb-3">
+                <span class="material-symbols-outlined text-sm" style="color:var(--text-muted);">location_on</span>
+                <span class="label text-xs" style="color:var(--text-secondary);">Victoria Island, Lagos</span>
+              </div>
+              <div class="grid grid-cols-2 gap-y-2 gap-x-4 mb-4">
+                <div><span class="label text-xs" style="color:var(--text-muted);">Valuation</span><div class="font-heading font-bold" style="color:var(--text);">N285M</div></div>
+                <div><span class="label text-xs" style="color:var(--text-muted);">Area</span><div class="font-heading font-bold" style="color:var(--text);">650 sqm</div></div>
+                <div><span class="label text-xs" style="color:var(--text-muted);">Type</span><div><span class="label text-xs px-2 py-0.5 rounded" style="background:var(--bg-low);color:var(--text-secondary);border:1px solid var(--border);">Residential</span></div></div>
+                <div><span class="label text-xs" style="color:var(--text-muted);">Tenure</span><div><span class="label text-xs px-2 py-0.5 rounded" style="background:var(--bg-low);color:var(--text-secondary);border:1px solid var(--border);">Freehold</span></div></div>
+              </div>
+            </div>
+            <button class="label text-xs rounded-lg py-2 px-4 font-semibold self-start" style="background:var(--accent);color:var(--accent-text);">View Full Report</button>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-xl overflow-hidden inner-glow flex flex-col md:flex-row">
+          <div class="w-full md:w-48 h-48 md:h-auto flex-shrink-0 relative" style="background:var(--bg-low);">
+            <div class="absolute inset-0 grid-bg opacity-30"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="material-symbols-outlined text-4xl" style="color:var(--text-muted);">image</span>
+            </div>
+          </div>
+          <div class="flex-1 p-5 flex flex-col justify-between">
+            <div>
+              <h3 class="font-heading font-bold text-lg mb-1" style="color:var(--text);">Ikeja Commercial Plaza</h3>
+              <div class="flex items-center gap-1.5 mb-3">
+                <span class="material-symbols-outlined text-sm" style="color:var(--text-muted);">location_on</span>
+                <span class="label text-xs" style="color:var(--text-secondary);">Ikeja, Lagos</span>
+              </div>
+              <div class="grid grid-cols-2 gap-y-2 gap-x-4 mb-4">
+                <div><span class="label text-xs" style="color:var(--text-muted);">Valuation</span><div class="font-heading font-bold" style="color:var(--text);">N780M</div></div>
+                <div><span class="label text-xs" style="color:var(--text-muted);">Area</span><div class="font-heading font-bold" style="color:var(--text);">1,200 sqm</div></div>
+                <div><span class="label text-xs" style="color:var(--text-muted);">Type</span><div><span class="label text-xs px-2 py-0.5 rounded" style="background:var(--bg-low);color:var(--text-secondary);border:1px solid var(--border);">Commercial</span></div></div>
+                <div><span class="label text-xs" style="color:var(--text-muted);">Tenure</span><div><span class="label text-xs px-2 py-0.5 rounded" style="background:var(--bg-low);color:var(--text-secondary);border:1px solid var(--border);">Leasehold</span></div></div>
+              </div>
+            </div>
+            <button class="label text-xs rounded-lg py-2 px-4 font-semibold self-start" style="background:var(--accent);color:var(--accent-text);">View Full Report</button>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-xl overflow-hidden inner-glow flex flex-col md:flex-row">
+          <div class="w-full md:w-48 h-48 md:h-auto flex-shrink-0 relative" style="background:var(--bg-low);">
+            <div class="absolute inset-0 grid-bg opacity-30"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="material-symbols-outlined text-4xl" style="color:var(--text-muted);">image</span>
+            </div>
+          </div>
+          <div class="flex-1 p-5 flex flex-col justify-between">
+            <div>
+              <h3 class="font-heading font-bold text-lg mb-1" style="color:var(--text);">Abuja Luxury Estate Plot</h3>
+              <div class="flex items-center gap-1.5 mb-3">
+                <span class="material-symbols-outlined text-sm" style="color:var(--text-muted);">location_on</span>
+                <span class="label text-xs" style="color:var(--text-secondary);">Maitama, Abuja FCT</span>
+              </div>
+              <div class="grid grid-cols-2 gap-y-2 gap-x-4 mb-4">
+                <div><span class="label text-xs" style="color:var(--text-muted);">Valuation</span><div class="font-heading font-bold" style="color:var(--text);">N420M</div></div>
+                <div><span class="label text-xs" style="color:var(--text-muted);">Area</span><div class="font-heading font-bold" style="color:var(--text);">2,000 sqm</div></div>
+                <div><span class="label text-xs" style="color:var(--text-muted);">Type</span><div><span class="label text-xs px-2 py-0.5 rounded" style="background:var(--bg-low);color:var(--text-secondary);border:1px solid var(--border);">Land</span></div></div>
+                <div><span class="label text-xs" style="color:var(--text-muted);">Tenure</span><div><span class="label text-xs px-2 py-0.5 rounded" style="background:var(--bg-low);color:var(--text-secondary);border:1px solid var(--border);">Freehold</span></div></div>
+              </div>
+            </div>
+            <button class="label text-xs rounded-lg py-2 px-4 font-semibold self-start" style="background:var(--accent);color:var(--accent-text);">View Full Report</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2">
+        <div class="sticky top-24 glass-card rounded-xl overflow-hidden inner-glow" style="aspect-ratio:3/4;">
+          <div class="absolute inset-0 grid-bg"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span class="material-symbols-outlined text-6xl" style="color:var(--text-muted);opacity:0.15;">map</span>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 p-5" style="background:linear-gradient(to top, var(--surface-card), transparent);">
+            <div class="glass-card rounded-xl p-4 inner-glow">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-sm" style="color:var(--accent);">radar</span>
+                <span class="label text-xs font-semibold" style="color:var(--text);">Registry Live Sync</span>
+                <span class="ml-auto flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full" style="background:var(--accent);"></span><span class="label text-xs" style="color:var(--accent);">Live</span></span>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="rounded-lg p-3" style="background:var(--bg-low);">
+                  <div class="label text-xs" style="color:var(--text-muted);">Active Nodes</div>
+                  <div class="font-heading font-bold text-lg" style="color:var(--text);">1,247</div>
+                </div>
+                <div class="rounded-lg p-3" style="background:var(--bg-low);">
+                  <div class="label text-xs" style="color:var(--text-muted);">Block Height</div>
+                  <div class="font-heading font-bold text-lg" style="color:var(--text);">8,492,103</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="absolute top-4 left-4 glass-card rounded-lg px-3 py-2 inner-glow flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm" style="color:var(--accent);">my_location</span>
+            <span class="label text-xs" style="color:var(--text);">Lagos Mainland</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="py-16" style="border-top:1px solid var(--border);">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid md:grid-cols-4 gap-10">
+      <div>
+        <a href="index.html" class="flex items-center gap-2 mb-4">
+          <span class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:var(--accent);">
+            <span class="material-symbols-outlined text-lg" style="color:var(--accent-text);font-variation-settings:'FILL' 1">terrain</span>
+          </span>
+          <span class="font-heading font-bold text-lg" style="color:var(--text);">Terra<span style="color:var(--accent);">Registry</span></span>
+        </a>
+        <p class="label text-xs leading-relaxed" style="color:var(--text-muted);">Nigeria's sovereign property intelligence infrastructure. Trusted by institutions.</p>
+      </div>
+      <div>
+        <h4 class="font-heading font-semibold text-sm mb-4" style="color:var(--text);">Registry</h4>
+        <ul class="space-y-2.5">
+          <li><a href="marketplace.html" class="label text-xs transition-colors" style="color:var(--text-muted);">Marketplace</a></li>
+          <li><a href="search.html" class="label text-xs transition-colors" style="color:var(--text-muted);">Property Search</a></li>
+          <li><a href="dashboard.html" class="label text-xs transition-colors" style="color:var(--text-muted);">Analytics</a></li>
+          <li><a href="detail.html" class="label text-xs transition-colors" style="color:var(--text-muted);">Sample Report</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-heading font-semibold text-sm mb-4" style="color:var(--text);">Developer</h4>
+        <ul class="space-y-2.5">
+          <li><a href="infrastructure.html" class="label text-xs transition-colors" style="color:var(--text-muted);">API Documentation</a></li>
+          <li><a href="infrastructure.html" class="label text-xs transition-colors" style="color:var(--text-muted);">Node Network</a></li>
+          <li><a href="governance.html" class="label text-xs transition-colors" style="color:var(--text-muted);">Governance</a></li>
+          <li><a href="infrastructure.html" class="label text-xs transition-colors" style="color:var(--text-muted);">System Status</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-heading font-semibold text-sm mb-4" style="color:var(--text);">Connect</h4>
+        <ul class="space-y-2.5">
+          <li><span class="label text-xs" style="color:var(--text-muted);">Lagos, Nigeria</span></li>
+          <li><span class="label text-xs" style="color:var(--text-muted);">hello@terraregistry.ng</span></li>
+          <li><span class="label text-xs" style="color:var(--text-muted);">+234 800 TERRA</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="flex justify-between items-center mt-10 pt-6" style="border-top:1px solid var(--border);">
+      <span class="label text-xs" style="color:var(--border-variant);">&copy; 2026 Terra Registry. All rights reserved.</span>
+      <div class="flex gap-4">
+        <span class="label text-xs" style="color:var(--border-variant);">Privacy</span>
+        <span class="label text-xs" style="color:var(--border-variant);">Terms</span>
+        <span class="label text-xs" style="color:var(--border-variant);">Licence</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('themeIcon').textContent = next === 'dark' ? 'dark_mode' : 'light_mode';
+}
+(function() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('themeIcon').textContent = saved === 'dark' ? 'dark_mode' : 'light_mode';
+  });
+})();
+</script>
+</body>
+</html>
